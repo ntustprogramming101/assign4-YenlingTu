@@ -20,8 +20,12 @@ final int START_BUTTON_HEIGHT = 60;
 final int START_BUTTON_X = 248;
 final int START_BUTTON_Y = 360;
 
-float[] cabbageX, cabbageY, soldierX, soldierY;
+float[] cabbageX, cabbageY;
+float []soldierX=new float[6];
+float []soldierY=new float[6];
 float soldierSpeed = 2f;
+
+
 
 float playerX, playerY;
 int playerCol, playerRow;
@@ -99,7 +103,10 @@ void setup() {
 	}
 
 	// Initialize soidiers and their position
-
+for(int i=0;i<6;i++){
+   soldierX[i]=int(random(8))*80;
+  soldierY[i]=int(random(4))*80+i*320;
+  }
 	// Initialize cabbages and their position
 
 }
@@ -286,6 +293,24 @@ void draw() {
 		image(groundhogDisplay, playerX, playerY);
 
 		// Soldiers
+    for(int i=0;i<6;i++){
+      soldierX[i]+=soldierSpeed;
+      if(soldierX[i]>640){soldierX[i]=-80;}
+      image(soldier,soldierX[i],soldierY[i]);
+      if(playerX<soldierX[i]+80&&playerX+80>soldierX[i]&&playerY+groundhogDown.height>soldierY[i]&&playerY<soldierY[i]+soldier.height){      
+      soilHealth[4][0]=15;
+      playerX = PLAYER_INIT_X;
+      playerY = PLAYER_INIT_Y;
+      playerCol = (int) (playerX / SOIL_SIZE);
+      playerRow = (int) (playerY / SOIL_SIZE);
+      playerMoveTimer = 0;
+      playerHealth--;    
+      }
+    }
+
+
+
+
 		// > Remember to stop player's moving! (reset playerMoveTimer)
 		// > Remember to recalculate playerCol/playerRow when you reset playerX/playerY!
 		// > Remember to reset the soil under player's original position!
@@ -310,7 +335,11 @@ void draw() {
 		popMatrix();
 
 		// Health UI
-
+      for(int i=0;i<playerHealth;i++){
+      image(life,10+i*(30+20),10);
+      }
+      if(playerHealth<=0){gameState=GAME_OVER;}
+   
 		break;
 
 		case GAME_OVER: // Gameover Screen
@@ -358,6 +387,7 @@ void draw() {
 		
 	}
 }
+
 
 void keyPressed(){
 	if(key==CODED){
